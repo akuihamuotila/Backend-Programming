@@ -24,4 +24,5 @@ public class MyController {
     public String hello(@RequestParam String location, @RequestParam String name) {
         return "Welcome to the " + location + " " + name + "!";
     }
+    
 }
