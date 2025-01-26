@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Viestilomake</title>
+</head>
+<body>
+    <h1>Syötä viesti</h1>
+    <form action="/message" method="post">
+        <label for="otsikko">Otsikko:</label>
+        <input type="text" id="otsikko" name="otsikko" required>
+        <br>
+        <label for="sisalto">Sisältö:</label>
+        <textarea id="sisalto" name="sisalto" required></textarea>
+        <br>
+        <button type="submit">Lähetä</button>
+    </form>
+
+    <h2>Viestit</h2>
+    <ul>
+        <li th:each="viesti : ${viestit}">
+            <strong th:text="${viesti.otsikko}"></strong>: <span th:text="${viesti.sisalto}"></span>
+        </li>
+    </ul>
+</body>
+</html>

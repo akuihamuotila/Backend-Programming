@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Muokkaa kirjaa</title>
+</head>
+<body>
+    <h1>Muokkaa kirjaa</h1>
+    <form th:action="@{/books/edit/{id}(id=${kirja.id})}" method="post">
+        <label for="nimi">Kirjan nimi:</label>
+        <input type="text" id="nimi" name="nimi" th:value="${kirja.nimi}" required>
+        <br>
+        <label for="kirjailija">Kirjailija:</label>
+        <input type="text" id="kirjailija" name="kirjailija" th:value="${kirja.kirjailija}" required>
+        <br>
+        <button type="submit">Tallenna</button>
+    </form>
+</body>
+</html>

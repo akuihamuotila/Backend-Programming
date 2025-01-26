@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kirjalista</title>
+</head>
+<body>
+    <h1>Kirjat</h1>
+    <form th:action="@{/books}" method="post">
+        <input type="text" name="nimi" placeholder="Kirjan nimi" required>
+        <input type="text" name="kirjailija" placeholder="Kirjailija" required>
+        <button type="submit">Lisää kirja</button>
+    </form>
+    <ul>
+        <li th:each="kirja : ${kirjat}">
+            <span th:text="${kirja.nimi}"></span> - <span th:text="${kirja.kirjailija}"></span>
+            <a th:href="@{/books/edit/{id}(id=${kirja.id})}">Muokkaa</a>
+            <a th:href="@{/books/delete/{id}(id=${kirja.id})}">Poista</a>
+        </li>
+    </ul>
+</body>
+</html>

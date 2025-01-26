@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Opiskelijalista</title>
+</head>
+<body>
+    <h1>Tervetuloa Haaga-Heliaan!</h1>
+    <ul>
+        <li th:each="opiskelija : ${opiskelijat}">
+            <span th:text="${opiskelija.etunimi}"></span>
+            <span th:text="${opiskelija.sukunimi}"></span>
+        </li>
+    </ul>
+</body>
+</html>
