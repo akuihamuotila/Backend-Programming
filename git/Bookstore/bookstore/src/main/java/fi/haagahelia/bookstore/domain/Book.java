@@ -5,18 +5,16 @@ public class Book {
     private String nimi;
     private String kirjailija;
 
-    public Book(Long id, String nimi, String kirjailija) {
-        this.id = id;
+    private static Long counter = 0L;
+
+    public Book(String nimi, String kirjailija) {
+        this.id = ++counter;
         this.nimi = nimi;
         this.kirjailija = kirjailija;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNimi() {

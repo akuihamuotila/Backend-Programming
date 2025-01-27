@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Muokkaa kirjaa</title>
 </head>
 <body>
     <h1>Muokkaa kirjaa</h1>
     <form th:action="@{/books/edit/{id}(id=${kirja.id})}" method="post">
-        <input type="text" name="nimi" th:value="${kirja.nimi}" required>
-        <input type="text" name="kirjailija" th:value="${kirja.kirjailija}" required>
+        <label for="nimi">Kirjan nimi:</label>
+        <input type="text" id="nimi" name="nimi" th:value="${kirja.nimi}" required>
+        <br>
+        <label for="kirjailija">Kirjailija:</label>
+        <input type="text" id="kirjailija" name="kirjailija" th:value="${kirja.kirjailija}" required>
+        <br>
         <button type="submit">Tallenna</button>
     </form>
-    <a th:href="@{/books}">Takaisin</a>
 </body>
 </html>

@@ -2,7 +2,6 @@ package fi.haagahelia.bookstore.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,20 +16,22 @@ import fi.haagahelia.bookstore.domain.Book;
 public class BookController {
 
     private List<Book> kirjat = new ArrayList<>();
-    private AtomicLong seuraavaId = new AtomicLong(1);
 
+    // Näytä kaikki kirjat ja lisäämislomake
     @GetMapping("/books")
     public String naytaKirjat(Model malli) {
         malli.addAttribute("kirjat", kirjat);
         return "kirjat";
     }
 
+    // Lisää uusi kirja
     @PostMapping("/books")
     public String lisaaKirja(@RequestParam String nimi, @RequestParam String kirjailija) {
-        kirjat.add(new Book(seuraavaId.getAndIncrement(), nimi, kirjailija));
+        kirjat.add(new Book(nimi, kirjailija));
         return "redirect:/books";
     }
 
+    // Näytä muokkauslomake
     @GetMapping("/books/edit/{id}")
     public String naytaMuokkauslomake(@PathVariable Long id, Model malli) {
         Book muokattava = etsiKirja(id);
@@ -41,6 +42,7 @@ public class BookController {
         return "redirect:/books";
     }
 
+    // Käsittele muokkauslomake
     @PostMapping("/books/edit/{id}")
     public String muokkaaKirjaa(@PathVariable Long id, @RequestParam String nimi, @RequestParam String kirjailija) {
         Book muokattava = etsiKirja(id);
@@ -51,12 +53,14 @@ public class BookController {
         return "redirect:/books";
     }
 
+    // Poista kirja
     @GetMapping("/books/delete/{id}")
     public String poistaKirja(@PathVariable Long id) {
         kirjat.removeIf(k -> k.getId().equals(id));
         return "redirect:/books";
     }
 
+    // Apu: Etsi kirja ID:n perusteella
     private Book etsiKirja(Long id) {
         return kirjat.stream().filter(k -> k.getId().equals(id)).findFirst().orElse(null);
     }
