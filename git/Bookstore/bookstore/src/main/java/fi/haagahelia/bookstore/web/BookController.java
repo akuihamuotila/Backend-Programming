@@ -1,8 +1,5 @@
 package fi.haagahelia.bookstore.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,57 +8,50 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import fi.haagahelia.bookstore.domain.Book;
+import fi.haagahelia.bookstore.domain.BookRepository;
 
 @Controller
 public class BookController {
 
-    private List<Book> kirjat = new ArrayList<>();
+    private final BookRepository repository;
 
-    // Näytä kaikki kirjat ja lisäämislomake
-    @GetMapping("/books")
+    public BookController(BookRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/books") // Hakee kaikki kirjat ja näyttää ne sivulla
     public String naytaKirjat(Model malli) {
-        malli.addAttribute("kirjat", kirjat);
+        malli.addAttribute("kirjat", repository.findAll());
         return "kirjat";
     }
 
-    // Lisää uusi kirja
-    @PostMapping("/books")
-    public String lisaaKirja(@RequestParam String nimi, @RequestParam String kirjailija) {
-        kirjat.add(new Book(nimi, kirjailija));
+    @PostMapping("/books") // Lisää uuden kirjan tietokantaan
+    public String lisaaKirja(@RequestParam String nimi, @RequestParam String kirjailija, @RequestParam int publicationYear) {
+        repository.save(new Book(nimi, kirjailija, publicationYear));
         return "redirect:/books";
     }
 
-    // Näytä muokkauslomake
-    @GetMapping("/books/edit/{id}")
+    @GetMapping("/books/edit/{id}") // Näyttää muokkauslomakkeen valitulle kirjalle
     public String naytaMuokkauslomake(@PathVariable Long id, Model malli) {
-        Book muokattava = etsiKirja(id);
-        if (muokattava != null) {
-            malli.addAttribute("kirja", muokattava);
-            return "muokkaus";
-        }
-        return "redirect:/books";
+        malli.addAttribute("kirja", repository.findById(id).orElse(null));
+        return "muokkaus";
     }
 
-    // Käsittele muokkauslomake
-    @PostMapping("/books/edit/{id}")
-    public String muokkaaKirjaa(@PathVariable Long id, @RequestParam String nimi, @RequestParam String kirjailija) {
-        Book muokattava = etsiKirja(id);
+    @PostMapping("/books/edit/{id}") // Päivittää kirjan tiedot
+    public String muokkaaKirjaa(@PathVariable Long id, @RequestParam String nimi, @RequestParam String kirjailija, @RequestParam int publicationYear) {
+        Book muokattava = repository.findById(id).orElse(null);
         if (muokattava != null) {
             muokattava.setNimi(nimi);
             muokattava.setKirjailija(kirjailija);
+            muokattava.setPublicationYear(publicationYear);
+            repository.save(muokattava);
         }
         return "redirect:/books";
     }
 
-    // Poista kirja
-    @GetMapping("/books/delete/{id}")
+    @GetMapping("/books/delete/{id}") // Poistaa kirjan tietokannasta
     public String poistaKirja(@PathVariable Long id) {
-        kirjat.removeIf(k -> k.getId().equals(id));
+        repository.deleteById(id);
         return "redirect:/books";
-    }
-
-    // Apu: Etsi kirja ID:n perusteella
-    private Book etsiKirja(Long id) {
-        return kirjat.stream().filter(k -> k.getId().equals(id)).findFirst().orElse(null);
     }
 }
