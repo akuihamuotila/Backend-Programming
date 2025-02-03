@@ -20,7 +20,7 @@ public class BookstoreApplication {
         return (args) -> {
             // Lisätään esimerkkikirjoja tietokantaan, kun sovellus käynnistyy
             repository.save(new Book("Dune", "Frank Herbert", 1965));
-            repository.save(new Book("The Hobbit", "J.R.R. Tolkien", 1937));
+            repository.save(new Book("The Silmarillion", "J.R.R. Tolkien", 1977));
             repository.save(new Book("Animal Farm", "George Orwell", 1945));
         };
     }
