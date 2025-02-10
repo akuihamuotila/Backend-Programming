@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-# Backend-Programming
-=======
-The "git" folder contains everything done on this course.
->>>>>>> 8ecae486b6f334caf79f662c2da1a61b93df62f9
+You can find the main project of the course from this link:
+https://github.com/akuihamuotila/Backend-Programming/tree/main/git/Bookstore/bookstore
+
