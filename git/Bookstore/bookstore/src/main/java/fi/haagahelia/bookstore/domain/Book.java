@@ -1,5 +1,7 @@
 package fi.haagahelia.bookstore.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,7 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore // Estää äärettömät rekursiot JSON-muodossa
     private Category category;
 
     // Constructors
