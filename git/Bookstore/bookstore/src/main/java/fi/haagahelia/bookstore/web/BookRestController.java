@@ -1,11 +1,19 @@
 package fi.haagahelia.bookstore.web;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import fi.haagahelia.bookstore.domain.Book;
 import fi.haagahelia.bookstore.domain.BookRepository;
@@ -14,6 +22,7 @@ import fi.haagahelia.bookstore.domain.CategoryRepository;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*") 
 public class BookRestController {
 
     @Autowired
@@ -31,14 +40,20 @@ public class BookRestController {
     // Hakee yhden kirjan ID:n perusteella JSON-muodossa
     @GetMapping("/books/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        Optional<Book> book = repository.findById(id);
-        return book.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Lisää uuden kirjan JSONin kautta
     @PostMapping("/books")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        return ResponseEntity.ok(repository.save(book));
+        if (book.getCategory() != null && book.getCategory().getId() != null) {
+            Optional<Category> category = categoryRepository.findById(book.getCategory().getId());
+            category.ifPresent(book::setCategory);
+        }
+        Book savedBook = repository.save(book);
+        return ResponseEntity.ok(savedBook);
     }
 
     // Päivittää kirjan tiedot
@@ -48,7 +63,13 @@ public class BookRestController {
             book.setNimi(bookDetails.getNimi());
             book.setKirjailija(bookDetails.getKirjailija());
             book.setPublicationYear(bookDetails.getPublicationYear());
-            book.setCategory(bookDetails.getCategory());
+
+            // Tarkistetaan ja asetetaan oikea kategoria
+            if (bookDetails.getCategory() != null && bookDetails.getCategory().getId() != null) {
+                Optional<Category> category = categoryRepository.findById(bookDetails.getCategory().getId());
+                category.ifPresent(book::setCategory);
+            }
+
             return ResponseEntity.ok(repository.save(book));
         }).orElse(ResponseEntity.notFound().build());
     }
@@ -58,7 +79,7 @@ public class BookRestController {
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build(); // 204 No Content
         } else {
             return ResponseEntity.notFound().build();
         }

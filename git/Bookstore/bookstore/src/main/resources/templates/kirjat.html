@@ -1,62 +1,98 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kirjalista</title>
-    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
-</head>
-<body class="container">
-    <h1 class="mt-4">Kirjalista</h1>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Kirjalista</title>
+      <link
+        type="text/css"
+        rel="stylesheet"
+        href="/css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}"
+      />
+    </head>
+    <body class="container">
+      <h1 class="mt-4">Kirjalista</h1>
 
-    <form action="/books" method="post" class="mb-4">
+      <form th:action="@{/books}" method="post" class="mb-4">
         <div class="mb-2">
-            <label for="nimi" class="form-label">Kirjan nimi:</label>
-            <input type="text" id="nimi" name="nimi" class="form-control" required>
+          <label for="nimi" class="form-label">Kirjan nimi:</label>
+          <input
+            type="text"
+            id="nimi"
+            name="nimi"
+            class="form-control"
+            required
+          />
         </div>
         <div class="mb-2">
-            <label for="kirjailija" class="form-label">Kirjailija:</label>
-            <input type="text" id="kirjailija" name="kirjailija" class="form-control" required>
+          <label for="kirjailija" class="form-label">Kirjailija:</label>
+          <input
+            type="text"
+            id="kirjailija"
+            name="kirjailija"
+            class="form-control"
+            required
+          />
         </div>
         <div class="mb-2">
-            <label for="publicationYear" class="form-label">Julkaisuvuosi:</label>
-            <input type="number" id="publicationYear" name="publicationYear" class="form-control" required>
+          <label for="publicationYear" class="form-label">Julkaisuvuosi:</label>
+          <input
+            type="number"
+            id="publicationYear"
+            name="publicationYear"
+            class="form-control"
+            required
+          />
         </div>
         <div class="mb-2">
-            <label for="category" class="form-label">Kategoria:</label>
-            <select id="category" name="categoryId" class="form-control" required>
-                <option th:each="category : ${categories}" 
-                        th:value="${category.id}" 
-                        th:text="${category.name}">
-                </option>
-            </select>
+          <label for="category" class="form-label">Kategoria:</label>
+          <select id="category" name="categoryId" class="form-control" required>
+            <option
+              th:each="category : ${categories}"
+              th:value="${category.id}"
+              th:text="${category.name}"
+            ></option>
+          </select>
         </div>
         <button type="submit" class="btn btn-success">Lisää</button>
-    </form>
+      </form>
 
-    <h2>Kirjat</h2>
-    <table class="table table-striped">
+      <h2>Kirjat</h2>
+      <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Nimi</th>
-                <th>Kirjailija</th>
-                <th>Julkaisuvuosi</th>
-                <th>Kategoria</th>
-                <th>Toiminnot</th>
-            </tr>
+          <tr>
+            <th>Nimi</th>
+            <th>Kirjailija</th>
+            <th>Julkaisuvuosi</th>
+            <th>Kategoria</th>
+            <th>Toiminnot</th>
+          </tr>
         </thead>
         <tbody>
-            <tr th:each="kirja : ${kirjat}">
-                <td th:text="${kirja.nimi}"></td>
-                <td th:text="${kirja.kirjailija}"></td>
-                <td th:text="${kirja.publicationYear}"></td>
-                <td th:text="${kirja.category != null ? kirja.category.name : 'Ei kategoriaa'}"></td>
-                <td>
-                    <a th:href="@{/books/edit/{id}(id=${kirja.id})}" class="btn btn-warning btn-sm">Muokkaa</a>
-                    <a th:href="@{/books/delete/{id}(id=${kirja.id})}" class="btn btn-danger btn-sm">Poista</a>
-                </td>
-            </tr>
+          <tr th:each="kirja : ${kirjat}">
+            <td th:text="${kirja.nimi}"></td>
+            <td th:text="${kirja.kirjailija}"></td>
+            <td th:text="${kirja.publicationYear}"></td>
+            <td
+              th:text="${kirja.category != null ? kirja.category.name : 'Ei kategoriaa'}"
+            ></td>
+            <td>
+              <a
+                th:href="@{/books/edit/{id}(id=${kirja.id})}"
+                class="btn btn-warning btn-sm"
+                >Muokkaa</a
+              >
+              <a
+                th:href="@{/books/delete/{id}(id=${kirja.id})}"
+                class="btn btn-danger btn-sm"
+                onclick="return confirm('Haluatko varmasti poistaa tämän kirjan?');"
+                >Poista</a
+              >
+            </td>
+          </tr>
         </tbody>
-    </table>
-</body>
+      </table>
+    </body>
+  </html>
 </html>
