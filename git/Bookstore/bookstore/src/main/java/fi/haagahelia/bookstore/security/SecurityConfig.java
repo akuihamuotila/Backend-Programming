@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .accessDeniedPage("/403")
             )
             .csrf(csrf -> csrf.disable())
-            .headers(headers -> headers.frameOptions().disable());
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
         return http.build();
     }

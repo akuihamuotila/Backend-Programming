@@ -23,13 +23,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String käyttäjätunnus) throws UsernameNotFoundException {
         Optional<User> käyttäjä = käyttäjäTietovarasto.findByKäyttäjätunnus(käyttäjätunnus);
         if (käyttäjä.isEmpty()) {
-            throw new UsernameNotFoundException("Käyttäjää ei löydy");
+            throw new UsernameNotFoundException("Käyttäjää ei löydy: " + käyttäjätunnus);
         }
-
+    
         User user = käyttäjä.get();
         return org.springframework.security.core.userdetails.User.withUsername(user.getKäyttäjätunnus())
             .password(user.getSalasana())
-            .roles(user.getRooli())
+            .roles(user.getRooli().toUpperCase())
             .build();
     }
 }
