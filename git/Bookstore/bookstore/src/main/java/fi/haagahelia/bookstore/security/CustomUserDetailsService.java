@@ -28,8 +28,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = käyttäjä.get();
         return org.springframework.security.core.userdetails.User.withUsername(user.getKäyttäjätunnus())
-                .password(user.getSalasana())
-                .roles(user.getRooli())
-                .build();
+            .password(user.getSalasana())
+            .roles(user.getRooli())
+            .build();
     }
 }

@@ -1,28 +1,59 @@
 package fi.haagahelia.bookstore.domain;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Getter
-@Setter
 @Entity
-@Table(name = "kayttaja")
+@Table(name = "app_user")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "käyttäjätunnus", unique = true)
     private String käyttäjätunnus;
 
-    @Column(nullable = false)
     private String salasana;
-
-    @Column(nullable = false)
-    private String sähköposti;
-
-    @Column(nullable = false)
     private String rooli;
+
+    public User() {}
+
+    public User(String käyttäjätunnus, String salasana, String rooli) {
+        this.käyttäjätunnus = käyttäjätunnus;
+        this.salasana = salasana;
+        this.rooli = rooli;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getKäyttäjätunnus() {
+        return käyttäjätunnus;
+    }
+
+    public void setKäyttäjätunnus(String käyttäjätunnus) {
+        this.käyttäjätunnus = käyttäjätunnus;
+    }
+
+    public String getSalasana() {
+        return salasana;
+    }
+
+    public void setSalasana(String salasana) {
+        this.salasana = salasana;
+    }
+
+    public String getRooli() {
+        return rooli;
+    }
+
+    public void setRooli(String rooli) {
+        this.rooli = rooli;
+    }
 }
