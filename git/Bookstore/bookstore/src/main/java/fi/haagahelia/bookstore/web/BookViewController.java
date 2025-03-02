@@ -1,6 +1,7 @@
 package fi.haagahelia.bookstore.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +73,8 @@ public class BookViewController {
         return "redirect:/books";
     }
 
-    // Poistaa kirjan
+    // Poistaa kirjan (vain ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) {
         bookRepository.deleteById(id);
