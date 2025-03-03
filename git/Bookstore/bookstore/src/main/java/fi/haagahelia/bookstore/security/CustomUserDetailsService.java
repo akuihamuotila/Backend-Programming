@@ -1,13 +1,13 @@
 package fi.haagahelia.bookstore.security;
 
-import java.util.Optional;
+import java.util.List;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import fi.haagahelia.bookstore.domain.User;
 import fi.haagahelia.bookstore.domain.UserRepository;
 
 @Service
@@ -21,15 +21,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String käyttäjätunnus) throws UsernameNotFoundException {
-        Optional<User> käyttäjä = käyttäjäTietovarasto.findByKäyttäjätunnus(käyttäjätunnus);
-        if (käyttäjä.isEmpty()) {
-            throw new UsernameNotFoundException("Käyttäjää ei löydy: " + käyttäjätunnus);
-        }
-    
-        User user = käyttäjä.get();
-        return org.springframework.security.core.userdetails.User.withUsername(user.getKäyttäjätunnus())
-            .password(user.getSalasana())
-            .roles(user.getRooli().toUpperCase())
-            .build();
+        fi.haagahelia.bookstore.domain.User käyttäjä = käyttäjäTietovarasto.findByKäyttäjätunnus(käyttäjätunnus)
+                .orElseThrow(() -> new UsernameNotFoundException("Käyttäjää ei löydy: " + käyttäjätunnus));
+
+        List<SimpleGrantedAuthority> roolit = List.of(new SimpleGrantedAuthority("ROLE_" + käyttäjä.getRooli().toUpperCase()));
+        
+        return new org.springframework.security.core.userdetails.User(
+                käyttäjä.getKäyttäjätunnus(),
+                käyttäjä.getSalasana(),
+                roolit
+        );
     }
 }

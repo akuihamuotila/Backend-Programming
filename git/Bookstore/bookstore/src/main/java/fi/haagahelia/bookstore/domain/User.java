@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "käyttäjätunnus", unique = true)
@@ -21,7 +21,8 @@ public class User {
     private String salasana;
     private String rooli;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String käyttäjätunnus, String salasana, String rooli) {
         this.käyttäjätunnus = käyttäjätunnus;

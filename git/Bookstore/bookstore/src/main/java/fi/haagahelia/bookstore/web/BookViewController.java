@@ -25,56 +25,34 @@ public class BookViewController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Näyttää kirjalistan
-    @GetMapping("")
-    public String showBooks(Model model) {
+    // Näytä kaikki kirjat
+    @GetMapping
+    public String listBooks(Model model) {
         model.addAttribute("kirjat", bookRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
         return "kirjat";
     }
 
-    // Lisää kirjan
-    @PostMapping("")
-    public String addBook(@RequestParam String nimi,
-                          @RequestParam String kirjailija,
-                          @RequestParam int publicationYear,
-                          @RequestParam Long categoryId) {
-
+    // Lisää uusi kirja
+    @PostMapping
+    public String addBook(@RequestParam String nimi, @RequestParam String kirjailija, @RequestParam int publicationYear, @RequestParam Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElse(null);
-        bookRepository.save(new Book(nimi, kirjailija, publicationYear, category));
+        Book book = new Book(nimi, kirjailija, publicationYear, category);
+        bookRepository.save(book);
         return "redirect:/books";
     }
 
-    // Näyttää muokkauslomakkeen
+    // Muokkaa kirjaa (vain ADMIN)
+    @PreAuthorize("hasAuthorize('ADMIN')")
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("kirja", bookRepository.findById(id).orElse(null));
+    public String editBook(@PathVariable Long id, Model model) {
+        model.addAttribute("book", bookRepository.findById(id).orElse(null));
         model.addAttribute("categories", categoryRepository.findAll());
-        return "muokkaus"; // Thymeleaf-näkymä
-    }
-
-    // Päivittää kirjan tiedot
-    @PostMapping("/edit/{id}")
-    public String updateBook(@PathVariable Long id,
-                             @RequestParam String nimi,
-                             @RequestParam String kirjailija,
-                             @RequestParam int publicationYear,
-                             @RequestParam Long categoryId) {
-
-        Book book = bookRepository.findById(id).orElse(null);
-        if (book != null) {
-            Category category = categoryRepository.findById(categoryId).orElse(null);
-            book.setNimi(nimi);
-            book.setKirjailija(kirjailija);
-            book.setPublicationYear(publicationYear);
-            book.setCategory(category);
-            bookRepository.save(book);
-        }
-        return "redirect:/books";
+        return "editBook";
     }
 
     // Poistaa kirjan (vain ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthorize('ADMIN')")
     @GetMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) {
         bookRepository.deleteById(id);

@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Book {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,11 +22,11 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnore // Estää äärettömät rekursiot JSON-muodossa
+    @JsonIgnore
     private Category category;
 
-    // Constructors
-    public Book() {}
+    public Book() {
+    }
 
     public Book(String nimi, String kirjailija, int publicationYear, Category category) {
         this.nimi = nimi;
@@ -35,18 +35,39 @@ public class Book {
         this.category = category;
     }
 
-    // Getterit ja setterit
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getNimi() { return nimi; }
-    public void setNimi(String nimi) { this.nimi = nimi; }
+    public String getNimi() {
+        return nimi;
+    }
 
-    public String getKirjailija() { return kirjailija; }
-    public void setKirjailija(String kirjailija) { this.kirjailija = kirjailija; }
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
+    }
 
-    public int getPublicationYear() { return publicationYear; }
-    public void setPublicationYear(int publicationYear) { this.publicationYear = publicationYear; }
+    public String getKirjailija() {
+        return kirjailija;
+    }
 
-    public Category getCategory() { return category; }
-    public void setCategory(Category category) { this.category = category; }
+    public void setKirjailija(String kirjailija) {
+        this.kirjailija = kirjailija;
+    }
+
+    public int getPublicationYear() {
+        return publicationYear;
+    }
+
+    public void setPublicationYear(int publicationYear) {
+        this.publicationYear = publicationYear;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

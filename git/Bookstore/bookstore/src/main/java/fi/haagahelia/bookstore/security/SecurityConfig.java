@@ -3,18 +3,12 @@ package fi.haagahelia.bookstore.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-
-    @Bean
-    public UserDetailsService käyttäjäpalvelu(CustomUserDetailsService customUserDetailsService) {
-        return customUserDetailsService;
-    }
 
     @Bean
     public PasswordEncoder salasanaKoodaus() {
@@ -27,7 +21,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/h2-console/**").permitAll()
                 .requestMatchers("/books").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/edit/**", "/delete/**").hasRole("ADMIN")
+                .requestMatchers("/books/edit/**", "/books/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
@@ -39,9 +33,6 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
-            )
-            .exceptionHandling(exception -> exception
-                .accessDeniedPage("/403")
             )
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
