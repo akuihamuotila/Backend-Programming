@@ -1,7 +1,8 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
     "java.project.sourcePaths": [
         "Bookstore/bookstore/src/main/java/fi/haagahelia/bookstore",
         "Bookstore/bookstore"
-    ]
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
 }
